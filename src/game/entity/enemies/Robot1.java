@@ -1,9 +1,9 @@
 package game.entity.enemies;
 
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
@@ -13,8 +13,11 @@ import game.gamestate.LevelState;
 import game.gfx.TileMap;
 
 public class Robot1 extends Enemy {
-
-	private BufferedImage[] sprites;
+	
+	// Animations
+	private final int[] numFrames = {				// How many frames each animation has
+			4, 4
+	};
 	
 	public Robot1(TileMap tm, LevelState ls) {
 		super(tm, ls);
@@ -32,24 +35,29 @@ public class Robot1 extends Enemy {
 		health = maxHealth = 30;
 		damage = 0.1;
 
-		// Load Sprites
+		// Load sprites
 		try {
 
 			BufferedImage spritesheet = ImageIO.read(getClass().getResourceAsStream("/Sprites/Enemies/robot1.gif"));
 
-			sprites = new BufferedImage[3];
-			for (int i = 0; i < sprites.length; i++) {
-				sprites[i] = spritesheet.getSubimage(i * spriteWidth, 0, spriteWidth, spriteHeight);
-			}
+			sprites = new ArrayList<>();
+			for (int i = 0; i < numFrames.length; i++) {
+				BufferedImage[] bi = new BufferedImage[numFrames[i]];
+				for (int j = 0; j < numFrames[i]; j++) {
+					bi[j] = spritesheet.getSubimage(j * spriteWidth, i * spriteHeight, spriteWidth, spriteHeight);
+				}
 
+				sprites.add(bi);
+			}
 
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
 
 		animation = new Animation();
-		animation.setFrames(sprites, false);
-		animation.setDelay(100);
+		currentAction = WALKING;
+		animation.setFrames(sprites.get(WALKING), false);
+		animation.setDelay(150);
 
 		right = false;
 		left = true;			// When spawned it goes left.
@@ -79,11 +87,7 @@ public class Robot1 extends Enemy {
 		getNextPosition();
 		checkTileMapCollision();
 		setPosition(xtemp, ytemp);
-
-		// Update animation.
-		animation.tick();
 		
-		// Fix bounds
 		super.tick();
 
 	}

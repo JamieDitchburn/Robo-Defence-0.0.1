@@ -36,7 +36,7 @@ public class Player extends Entity {
 		height = 28;
 		
 		moveSpeed = 0.3;
-		maxSpeed = 1.6 * 3;
+		maxSpeed = 3;
 		stopSpeed = 0.4;
 		fallSpeed = 0.15;
 		maxFallSpeed = 10;

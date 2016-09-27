@@ -236,17 +236,19 @@ public class LevelState extends GameState {
 	}
 	
 	public void checkCollisionWithTurret(Enemy enemy) {			// Check if the enemy is colliding with a turret and attack.
+	boolean turretCollision = false;
 		
 		for (Turret t: turrets) {
 			if (enemy.getx() - (enemy.getWidth() / 2) < t.getx() + (t.getWidth() / 2) && enemy.getx() + (enemy.getWidth() / 2) > t.getx() - (t.getWidth() / 2)) {
-				enemy.setAttacking(true);
+				turretCollision = true;
 				t.hit(enemy.getDamage());
 				enemy.setx((int)(t.getx() + (t.getWidth() / 2) + (enemy.getWidth() / 2)));
 				break;
 			}
-			enemy.setAttacking(false);
 		}
-
+		if (turretCollision) enemy.setAttacking();
+		else if (enemy.getx() > enemy.getWidth() / 2 + tileMap.getTileSize()) enemy.setWalking();	// ie Not attacking the base.
+		
 	}
 	
 	// Randomly spawn robots in increasing numbers.
@@ -362,16 +364,18 @@ public class LevelState extends GameState {
 		for (int i = 0; i < robots.size(); i++) {
 			Enemy robot = robots.get(i);
 			robot.tick();
-			if (robot.getx() == robot.getWidth() / 2 + tileMap.getTileSize()) baseHealth -= robot.getDamage();
+			if (robot.getx() == robot.getWidth() / 2 + tileMap.getTileSize()) {		// Attack the base
+				baseHealth -= robot.getDamage();
+				robot.setAttacking();
+			}
 				
-			if (robot.isDead()) {				// Check if robot is dead.
+			if (robot.isDead()) {		// Check if robot is dead.
 				robots.remove(i);
 				i--;
 				resource += 20;
 				robotsKilled++;
 			}
-			
-			checkCollisionWithTurret(robot);		// If colliding with a turret, stop and attack.
+			checkCollisionWithTurret(robot);	// If colliding with a turret, stop and attack.
 			
 		}
 		

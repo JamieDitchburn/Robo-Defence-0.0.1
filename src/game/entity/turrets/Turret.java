@@ -140,11 +140,11 @@ public class Turret extends Entity {
 				if (e.getx() < levelState.getRobot(closestEnemy).getx()) {		// If closer than other enemies that are in range.
 					closestEnemy = i;
 				}
-				setFiring();							// If any are in range, start firing.
+				setFiring();							// If any are in range, start firing animation.
 			}
 		}
 		if (closestEnemy == -1) setIdle();				// If no enemies are in range, set idle.
-		else if (currentAction != BUILDING) {			// Don't start atatcking until the building animation has finished.
+		else if (currentAction == FIRING) {				// Don't start atatcking until the building and upgrade animations have finished.
 			attack(levelState.getRobot(closestEnemy));	// Only attack the closest enemy.
 		}
 		
