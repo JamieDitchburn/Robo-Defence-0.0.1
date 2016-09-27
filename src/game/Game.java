@@ -2,15 +2,6 @@ package game;
 
 import javax.swing.JFrame;
 
-
-/*
- * Resources used:
- * 
- * https://www.youtube.com/playlist?list=PL-2t7SM0vDfcIedoMIghzzgQqZq45jYGv
- * Ludum Dare
- * 
- */
-
 public class Game {
 
 	public static final String GAME_NAME = "Robo-Defence";		// Name might be changed later.
